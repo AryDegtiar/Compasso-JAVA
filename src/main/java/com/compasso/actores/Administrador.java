@@ -16,7 +16,7 @@ public class Administrador {
     @Id
     @GeneratedValue
     private Integer id;
-    private String nombre;
+    private String usuario;
     private String contrasenia;
 
     @OneToMany
@@ -27,9 +27,9 @@ public class Administrador {
         this.productos = new ArrayList<>();
     }
 
-    public Administrador(String nombre, String contrasenia) {
+    public Administrador(String usuario, String contrasenia) {
         super();
-        this.nombre = nombre;
+        this.usuario = usuario;
         this.contrasenia = contrasenia;
     }
 }

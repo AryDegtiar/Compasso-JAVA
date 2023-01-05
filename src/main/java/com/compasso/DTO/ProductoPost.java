@@ -11,4 +11,6 @@ public class ProductoPost {
     private String imagen;
 
     private String fichaTecnica;
+
+    private String creador;
 }

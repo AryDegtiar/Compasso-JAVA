@@ -3,7 +3,9 @@ package com.compasso.controlador;
 
 import com.compasso.DTO.ProductoPatch;
 import com.compasso.DTO.ProductoPost;
+import com.compasso.actores.Administrador;
 import com.compasso.productos.Producto;
+import com.compasso.repositorios.RepositorioAdministrador;
 import com.compasso.repositorios.RepositorioProducto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +26,10 @@ import java.util.List;
 @RequestMapping("/productos")
 public class ControladorProducto {
 // ver de poner validaciones paginacion y dto para fechas
-    @Autowired private RepositorioProducto repositorioProducto;
+    @Autowired
+    private RepositorioProducto repositorioProducto;
+    @Autowired
+    private RepositorioAdministrador repositorioAdministrador;
 
     @GetMapping(path = {"","/"})
     Page<Producto> productoList(@RequestParam(required = false) Boolean activo,
@@ -47,7 +52,7 @@ public class ControladorProducto {
             return new ResponseEntity<>("Error, campos invalidos", HttpStatus.BAD_REQUEST);
         }
 
-        Producto producto = new Producto(productoPost.getNombre(), productoPost.getDescripcion(), productoPost.getImagen(), productoPost.getFichaTecnica());
+        Producto producto = new Producto(productoPost.getNombre(), productoPost.getDescripcion(), productoPost.getImagen(), productoPost.getFichaTecnica(), productoPost.getCreador());
 
         return ResponseEntity.ok(repositorioProducto.save(producto));
     }
@@ -58,13 +63,34 @@ public class ControladorProducto {
         if (bindingResult.hasErrors()){
             return new ResponseEntity<>("Error, campos invalidos", HttpStatus.BAD_REQUEST);
         }
+
         if (repositorioProducto.existsById(productoID)){
             Producto producto = repositorioProducto.findById(productoID).get();
-            producto.setNombre(productoPatch.getNombre());
-            producto.setDescripcion(productoPatch.getDescripcion());
-            producto.setImagen(productoPatch.getImagen());
-            producto.setFichaTecnica(productoPatch.getFichaTecnica());
-            producto.setActivo(productoPatch.getActivo());
+            Administrador admin = repositorioAdministrador.findByUsuario(producto.getCreador());
+
+            System.out.println("admin: " + admin);
+
+            // valida que solo pueda comidificar el creador
+            if (productoPatch.getCreadorID() != admin.getId()) {
+                return new ResponseEntity<>("Error, campos invalidos", HttpStatus.BAD_REQUEST);
+            }
+
+            if (productoPatch.getActivo() != null){
+                producto.setActivo(productoPatch.getActivo());
+            }
+            if (productoPatch.getNombre() != null){
+                producto.setNombre(productoPatch.getNombre());
+            }
+            if (productoPatch.getDescripcion() != null){
+                producto.setDescripcion(productoPatch.getDescripcion());
+            }
+            if (productoPatch.getImagen() != null){
+                producto.setImagen(productoPatch.getImagen());
+            }
+            if (productoPatch.getFichaTecnica() != null){
+                producto.setFichaTecnica(productoPatch.getFichaTecnica());
+            }
+
             producto.guardarFechaModificacion();
             return ResponseEntity.ok(repositorioProducto.save(producto));
         }else{
