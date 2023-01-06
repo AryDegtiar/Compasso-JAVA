@@ -4,17 +4,23 @@ import com.compasso.DTO.AdministradorLogIn;
 import com.compasso.DTO.ProductoPatch;
 import com.compasso.DTO.ProductoPost;
 import com.compasso.actores.Administrador;
+import com.compasso.imagenes.FileUploadResponse;
+import com.compasso.imagenes.FileUtil;
 import com.compasso.productos.Producto;
 import com.compasso.repositorios.RepositorioAdministrador;
 import com.compasso.repositorios.RepositorioProducto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -83,7 +89,7 @@ public class ControladorAdministrador {
     public ResponseEntity<?> agregarProducto(@PathVariable("administradorID") Integer administradorID, @RequestBody ProductoPost productoPost){
         if (repositorioAdministrador.findById(administradorID).isPresent()) {
             Administrador admin = repositorioAdministrador.findById(administradorID).get();
-            Producto producto = new Producto(productoPost.getNombre(), productoPost.getDescripcion(), productoPost.getImagen(), productoPost.getFichaTecnica());
+            Producto producto = new Producto(productoPost.getNombre(), productoPost.getDescripcion(), productoPost.getFichaTecnica());
             producto.setCreador(admin.getUsuario());
             admin.addProducto(producto);
             repositorioProducto.save(producto);
@@ -109,9 +115,6 @@ public class ControladorAdministrador {
                     }
                     if (productoPatch.getDescripcion() != null){
                         producto.setDescripcion(productoPatch.getDescripcion());
-                    }
-                    if (productoPatch.getImagen() != null){
-                        producto.setImagen(productoPatch.getImagen());
                     }
                     if (productoPatch.getFichaTecnica() != null){
                         producto.setFichaTecnica(productoPatch.getFichaTecnica());
@@ -159,6 +162,38 @@ public class ControladorAdministrador {
             }
         }else{
             return new ResponseEntity<>("Error, administrador no encontrado", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //imagen
+    @PostMapping(path = {"/{administradorID}/productos/{productoID}/imagen"})
+    public ResponseEntity<FileUploadResponse> uploadFile(@PathVariable("administradorID") Integer administradorID,
+                                                         @PathVariable("productoID") Integer productoID,
+                                                         @RequestParam("file") MultipartFile multipartFile) throws IOException {
+        if (repositorioAdministrador.existsById(administradorID) && repositorioProducto.existsById(productoID)){
+            Administrador admin = repositorioAdministrador.findById(administradorID).get();
+            Producto producto = repositorioProducto.findById(productoID).get();
+
+            if (producto.getCreador().equals(admin.getUsuario())) {
+                String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+                long size = multipartFile.getSize();
+
+                String fileCode = FileUtil.saveFile(fileName, multipartFile);
+
+                FileUploadResponse response = new FileUploadResponse();
+                response.setFileName(fileName);
+                response.setSize(String.valueOf(size));
+                response.setDownloadUri("/productos/imagen/" + fileCode);
+
+                producto.setImagen(response.getDownloadUri());
+                repositorioProducto.save(producto);
+
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

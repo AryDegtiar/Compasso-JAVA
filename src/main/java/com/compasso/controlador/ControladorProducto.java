@@ -4,21 +4,25 @@ package com.compasso.controlador;
 import com.compasso.DTO.ProductoPatch;
 import com.compasso.DTO.ProductoPost;
 import com.compasso.actores.Administrador;
+import com.compasso.imagenes.FileUtil;
 import com.compasso.productos.Producto;
 import com.compasso.repositorios.RepositorioAdministrador;
 import com.compasso.repositorios.RepositorioProducto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -41,6 +45,31 @@ public class ControladorProducto {
     @GetMapping(path = {"/{productoID}"})
     Producto producto(@PathVariable("productoID") Integer productoID){
         return repositorioProducto.findById(productoID).get();
+    }
+
+    @GetMapping(path = {"/imagen/{fileCode}"})
+    public ResponseEntity<?> downloadFile(@PathVariable("fileCode") String fileCode) throws IOException {
+        FileUtil fileUtil = new FileUtil();
+
+        Resource resource = null;
+
+        try {
+            resource = fileUtil.getFileAsResource(fileCode);
+        }catch (IOException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (resource == null) {
+            return new ResponseEntity<>("no se encontro el archivo",HttpStatus.NOT_FOUND);
+        }
+
+        String contentType = "application/octet-stream";
+        String headerValue = String.format("attachment; filename=\"" + resource.getFilename() + "\"");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                .contentType(org.springframework.http.MediaType.parseMediaType(contentType))
+                .body(resource);
     }
 
 /*  NO SE USA YA QUE SOLO SE CARGAN LOS PRODUCTOS DESDE EL USUARIO ADMINISTRADOR

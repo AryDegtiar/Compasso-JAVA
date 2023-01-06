@@ -1,5 +1,6 @@
 package com.compasso.productos;
 
+import com.compasso.imagenes.FileUploadResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +21,6 @@ public class Producto {
     private String nombre;
     @NotNull @NotBlank
     private String descripcion;
-    @NotNull @NotBlank
     private String imagen;
     @NotNull
     private String fichaTecnica;
@@ -29,10 +29,9 @@ public class Producto {
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
 
-    public Producto(String nombre, String descripcion, String imagen, String fichaTecnica) {
+    public Producto(String nombre, String descripcion, String fichaTecnica) {
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.imagen = imagen;
         this.fichaTecnica = fichaTecnica;
         this.activo = true;
         this.fechaCreacion = LocalDateTime.now();

@@ -39,4 +39,5 @@ public class Administrador {
         this.usuario = usuario;
         this.contrasenia = contrasenia;
     }
+
 }

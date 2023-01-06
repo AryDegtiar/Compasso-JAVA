@@ -8,7 +8,7 @@ public class ProductoPost {
 
     private String descripcion;
 
-    private String imagen;
+    //private String imagen;
 
     private String fichaTecnica;
 
