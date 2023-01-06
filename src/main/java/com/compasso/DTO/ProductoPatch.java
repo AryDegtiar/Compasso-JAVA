@@ -1,12 +1,9 @@
 package com.compasso.DTO;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
 public class ProductoPatch {
-    @NotNull
-    private Integer creadorID;
 
     private Boolean activo;
 

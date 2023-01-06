@@ -23,6 +23,13 @@ public class Administrador {
     @JoinColumn(name = "administradorId", referencedColumnName = "id")
     private List<Producto> productos;
 
+    public void addProducto(Producto producto) {
+        if (productos == null) {
+            productos = new ArrayList<>();
+        }
+        productos.add(producto);
+    }
+
     public Administrador() {
         this.productos = new ArrayList<>();
     }

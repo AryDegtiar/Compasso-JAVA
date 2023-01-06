@@ -25,7 +25,8 @@ public class CompassoApplication {
 				System.out.println(args[0]);
 			}
 
-			repositorioAdministrador.save( new Administrador("adminCompasso","Comp@ssoCompostela") );
+			//repositorioAdministrador.save( new Administrador("adminCompasso","Comp@ssoCompostela") );
+			repositorioAdministrador.save( new Administrador("test","123") );
 
 		};
 	}

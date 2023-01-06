@@ -25,11 +25,8 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/productos")
 public class ControladorProducto {
-// ver de poner validaciones paginacion y dto para fechas
     @Autowired
     private RepositorioProducto repositorioProducto;
-    @Autowired
-    private RepositorioAdministrador repositorioAdministrador;
 
     @GetMapping(path = {"","/"})
     Page<Producto> productoList(@RequestParam(required = false) Boolean activo,
@@ -46,13 +43,14 @@ public class ControladorProducto {
         return repositorioProducto.findById(productoID).get();
     }
 
+/*  NO SE USA YA QUE SOLO SE CARGAN LOS PRODUCTOS DESDE EL USUARIO ADMINISTRADOR
     @PostMapping(path = {"","/"})
     ResponseEntity<?> agregarProducto(@Valid @RequestBody ProductoPost productoPost, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return new ResponseEntity<>("Error, campos invalidos", HttpStatus.BAD_REQUEST);
         }
 
-        Producto producto = new Producto(productoPost.getNombre(), productoPost.getDescripcion(), productoPost.getImagen(), productoPost.getFichaTecnica(), productoPost.getCreador());
+        Producto producto = new Producto(productoPost.getNombre(), productoPost.getDescripcion(), productoPost.getImagen(), productoPost.getFichaTecnica());
 
         return ResponseEntity.ok(repositorioProducto.save(producto));
     }
@@ -66,14 +64,6 @@ public class ControladorProducto {
 
         if (repositorioProducto.existsById(productoID)){
             Producto producto = repositorioProducto.findById(productoID).get();
-            Administrador admin = repositorioAdministrador.findByUsuario(producto.getCreador());
-
-            System.out.println("admin: " + admin);
-
-            // valida que solo pueda comidificar el creador
-            if (productoPatch.getCreadorID() != admin.getId()) {
-                return new ResponseEntity<>("Error, campos invalidos", HttpStatus.BAD_REQUEST);
-            }
 
             if (productoPatch.getActivo() != null){
                 producto.setActivo(productoPatch.getActivo());
@@ -107,4 +97,7 @@ public class ControladorProducto {
             repositorioProducto.save(producto);
         }
     }
+*/
 }
+
+

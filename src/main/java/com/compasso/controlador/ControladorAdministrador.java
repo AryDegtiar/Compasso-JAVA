@@ -1,15 +1,21 @@
 package com.compasso.controlador;
 
 import com.compasso.DTO.AdministradorLogIn;
+import com.compasso.DTO.ProductoPatch;
+import com.compasso.DTO.ProductoPost;
 import com.compasso.actores.Administrador;
 import com.compasso.productos.Producto;
 import com.compasso.repositorios.RepositorioAdministrador;
 import com.compasso.repositorios.RepositorioProducto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -18,6 +24,8 @@ import java.util.List;
 public class ControladorAdministrador {
     @Autowired
     private RepositorioAdministrador repositorioAdministrador;
+    @Autowired
+    private RepositorioProducto repositorioProducto;
 
     // modificar para que no se vea la contraseña
 
@@ -42,6 +50,115 @@ public class ControladorAdministrador {
             return new ResponseEntity<>(admin.getId(), HttpStatus.OK);
         }else{
             return new ResponseEntity<>("Error, usuario o contraseña incorrectos", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(path = {"/{administradorID}/productos"})
+    public ResponseEntity<?> administradorProductos(@PathVariable("administradorID") Integer administradorID){
+        if (repositorioAdministrador.findById(administradorID).isPresent()) {
+            Administrador admin = repositorioAdministrador.findById(administradorID).get();
+            return new ResponseEntity<>(admin.getProductos(), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Error, administrador no encontrado", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(path = {"/{administradorID}/productos/{productoID}"})
+    public ResponseEntity<?> getAdminProducto(@PathVariable("administradorID") Integer administradorID, @PathVariable("productoID") Integer productoID){
+        if (repositorioAdministrador.existsById(administradorID) && repositorioProducto.existsById(productoID)){
+            Administrador admin = repositorioAdministrador.findById(administradorID).get();
+            Producto prod = repositorioProducto.findById(productoID).get();
+
+            if (admin.getProductos().contains(prod)){
+                return new ResponseEntity<>(prod, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("Error, campos invalidos", HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        return new ResponseEntity<>("Error, administrador o producto no encontrado", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(path = {"/{administradorID}/productos"})
+    public ResponseEntity<?> agregarProducto(@PathVariable("administradorID") Integer administradorID, @RequestBody ProductoPost productoPost){
+        if (repositorioAdministrador.findById(administradorID).isPresent()) {
+            Administrador admin = repositorioAdministrador.findById(administradorID).get();
+            Producto producto = new Producto(productoPost.getNombre(), productoPost.getDescripcion(), productoPost.getImagen(), productoPost.getFichaTecnica());
+            producto.setCreador(admin.getUsuario());
+            admin.addProducto(producto);
+            repositorioProducto.save(producto);
+            return new ResponseEntity<>(producto, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Error, administrador no encontrado", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping(path = {"/{administradorID}/productos/{productoID}"})
+    public ResponseEntity<?> modificarProducto(@PathVariable("administradorID") Integer administradorID,
+                                               @PathVariable("productoID") Integer productoID, @RequestBody ProductoPatch productoPatch){
+
+        if (repositorioAdministrador.findById(administradorID).isPresent()) {
+            if (repositorioProducto.findById(productoID).isPresent()) {
+                Administrador admin = repositorioAdministrador.findById(administradorID).get();
+                Producto producto = repositorioProducto.findById(productoID).get();
+
+                if (producto.getCreador().equals(admin.getUsuario())){
+
+                    if (productoPatch.getNombre() != null){
+                        producto.setNombre(productoPatch.getNombre());
+                    }
+                    if (productoPatch.getDescripcion() != null){
+                        producto.setDescripcion(productoPatch.getDescripcion());
+                    }
+                    if (productoPatch.getImagen() != null){
+                        producto.setImagen(productoPatch.getImagen());
+                    }
+                    if (productoPatch.getFichaTecnica() != null){
+                        producto.setFichaTecnica(productoPatch.getFichaTecnica());
+                    }
+                    if (productoPatch.getActivo() != null){
+                        producto.setActivo(productoPatch.getActivo());
+                    }
+
+                    producto.setFechaModificacion(LocalDateTime.now());
+                    repositorioProducto.save(producto);
+                    return new ResponseEntity<>(producto, HttpStatus.OK);
+                }else{
+                    // el administrador no es el mismo que el creador
+                    return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+                }
+
+            }else{
+                return new ResponseEntity<>("Error, producto no encontrado", HttpStatus.BAD_REQUEST);
+            }
+        }else{
+            return new ResponseEntity<>("Error, administrador no encontrado", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping(path = {"/{administradorID}/productos/{productoID}"})
+    public ResponseEntity<?> eliminarProducto(@PathVariable("administradorID") Integer administradorID,
+                                               @PathVariable("productoID") Integer productoID){
+
+        if (repositorioAdministrador.findById(administradorID).isPresent()) {
+            if (repositorioProducto.findById(productoID).isPresent()) {
+                Administrador admin = repositorioAdministrador.findById(administradorID).get();
+                Producto producto = repositorioProducto.findById(productoID).get();
+
+                if (producto.getCreador().equals(admin.getUsuario())){
+                    producto.setActivo(false);
+                    repositorioProducto.save(producto);
+                    return new ResponseEntity<>(producto, HttpStatus.OK);
+                }else{
+                    // el administrador no es el mismo que el creador
+                    return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+                }
+
+            }else{
+                return new ResponseEntity<>("Error, producto no encontrado", HttpStatus.BAD_REQUEST);
+            }
+        }else{
+            return new ResponseEntity<>("Error, administrador no encontrado", HttpStatus.BAD_REQUEST);
         }
     }
 

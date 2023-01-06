@@ -24,17 +24,16 @@ public class Producto {
     private String imagen;
     @NotNull
     private String fichaTecnica;
-    @NotNull
+
     private String creador;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
 
-    public Producto(String nombre, String descripcion, String imagen, String fichaTecnica, String creador) {
+    public Producto(String nombre, String descripcion, String imagen, String fichaTecnica) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagen = imagen;
         this.fichaTecnica = fichaTecnica;
-        this.creador = creador;
         this.activo = true;
         this.fechaCreacion = LocalDateTime.now();
     }

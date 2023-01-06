@@ -12,5 +12,4 @@ public class ProductoPost {
 
     private String fichaTecnica;
 
-    private String creador;
 }
