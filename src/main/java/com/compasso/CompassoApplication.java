@@ -26,10 +26,11 @@ public class CompassoApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST","PUT", "DELETE");
+				registry.addMapping("/**").allowedOrigins("https://compasso-front.web.app").allowedMethods("*").allowedHeaders("*");
 			}
 		};
 	}
+
 
 	@Bean
 	public CommandLineRunner init() {
