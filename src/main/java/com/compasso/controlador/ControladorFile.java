@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 
 @RestController
-@CrossOrigin(origins = "http://compasso-java-production.up.railway.app")
+@CrossOrigin
 @RequestMapping("/files")
 public class ControladorFile {
 
