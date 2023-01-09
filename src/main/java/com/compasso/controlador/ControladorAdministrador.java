@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "https://compasso-front.web.app/")
+//@CrossOrigin(origins = "https://compasso-front.web.app/")
 @RequestMapping("/administradores")
 public class ControladorAdministrador {
     @Autowired
