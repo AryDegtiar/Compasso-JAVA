@@ -21,10 +21,11 @@ public class Producto {
     private String nombre;
     @NotNull @NotBlank
     private String descripcion;
+
     private String imagen;
     @NotNull
     private String fichaTecnica;
-
+    @NotNull
     private String creador;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;

@@ -1,6 +1,7 @@
 package com.compasso;
 
 import com.compasso.actores.Administrador;
+import com.compasso.productos.Producto;
 import com.compasso.repositorios.RepositorioAdministrador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -26,7 +27,10 @@ public class CompassoApplication {
 			}
 
 			//repositorioAdministrador.save( new Administrador("adminCompasso","Comp@ssoCompostela") );
-			repositorioAdministrador.save( new Administrador("test","123") );
+
+			//Administrador administrador =  new Administrador("test","123");
+			//repositorioAdministrador.save(administrador);
+
 
 		};
 	}

@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RequestMapping("/files")
 public class ControladorFile {
 
