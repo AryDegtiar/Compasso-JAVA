@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://compasso-java-production.up.railway.app")
 @RequestMapping("/productos")
 public class ControladorProducto {
     @Autowired
