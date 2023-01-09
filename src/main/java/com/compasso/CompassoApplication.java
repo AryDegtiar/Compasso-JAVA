@@ -42,7 +42,7 @@ public class CompassoApplication {
 			//repositorioAdministrador.save( new Administrador("adminCompasso","Comp@ssoCompostela") );
 
 			Administrador administrador =  new Administrador("test","123");
-			repositorioAdministrador.save(administrador);
+			repositorioAdministrador.save(administrador);//
 
 
 		};
