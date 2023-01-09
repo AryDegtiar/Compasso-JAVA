@@ -170,7 +170,7 @@ public class ControladorAdministrador {
     public ResponseEntity<?> uploadFile(@PathVariable("administradorID") Integer administradorID,
                                                          @PathVariable("productoID") Integer productoID,
                                                          @RequestParam("file") MultipartFile multipartFile) throws IOException {
-     /*   if (repositorioAdministrador.existsById(administradorID) && repositorioProducto.existsById(productoID)){
+        if (repositorioAdministrador.existsById(administradorID) && repositorioProducto.existsById(productoID)){
             Administrador admin = repositorioAdministrador.findById(administradorID).get();
             Producto producto = repositorioProducto.findById(productoID).get();
 
@@ -196,8 +196,6 @@ public class ControladorAdministrador {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-      */
-        return new ResponseEntity<>("imagen omitida",HttpStatus.OK);
     }
 
 

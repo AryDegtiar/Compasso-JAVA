@@ -31,7 +31,7 @@ public class CompassoApplication {
 		};
 	}
 
-
+/*
 	@Bean
 	public CommandLineRunner init() {
 		return (args) -> {
@@ -47,5 +47,7 @@ public class CompassoApplication {
 
 		};
 	}
+	
+ */
 
 }
