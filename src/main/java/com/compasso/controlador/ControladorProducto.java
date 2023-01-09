@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "https://compasso-front.web.app/")
 @RequestMapping("/productos")
 public class ControladorProducto {
     @Autowired
