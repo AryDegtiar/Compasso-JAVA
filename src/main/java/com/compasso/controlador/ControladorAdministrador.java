@@ -190,10 +190,10 @@ public class ControladorAdministrador {
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("No autorizado", HttpStatus.BAD_REQUEST);
             }
         }else{
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Surgio un error", HttpStatus.BAD_REQUEST);
         }
 
     }
