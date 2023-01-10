@@ -20,7 +20,8 @@ public class CompassoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CompassoApplication.class, args);
 	}
-/*
+
+	/*
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
