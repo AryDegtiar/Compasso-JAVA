@@ -15,7 +15,6 @@ import java.io.IOException;
  * Controlador para subir archivos inutilizado
  */
 
-/*
 @RestController
 @CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false")
 @RequestMapping("/files")
@@ -62,4 +61,4 @@ public class ControladorFile {
     }
 
 }
-*/
+
