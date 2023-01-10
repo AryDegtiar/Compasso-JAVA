@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false")
 @RequestMapping("/files")
 public class ControladorFile {
 

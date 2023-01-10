@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false")
 @RequestMapping("/productos")
 public class ControladorProducto {
     @Autowired

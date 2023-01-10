@@ -30,7 +30,6 @@ public class CompassoApplication {
 			}
 		};
 	}
-//
 /*
 	@Bean
 	public CommandLineRunner init() {

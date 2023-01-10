@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false")
 @RequestMapping("/administradores")
 public class ControladorAdministrador {
     @Autowired
