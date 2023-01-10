@@ -170,6 +170,8 @@ public class ControladorAdministrador {
     public ResponseEntity<?> uploadFile(@PathVariable("administradorID") Integer administradorID,
                                                          @PathVariable("productoID") Integer productoID,
                                                          @RequestParam("file") MultipartFile multipartFile) throws IOException {
+        System.out.println("File upload");
+        System.out.println(multipartFile.getOriginalFilename());
         if (repositorioAdministrador.existsById(administradorID) && repositorioProducto.existsById(productoID)){
             Administrador admin = repositorioAdministrador.findById(administradorID).get();
             Producto producto = repositorioProducto.findById(productoID).get();
