@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.File;
+
 @SpringBootApplication
 public class CompassoApplication {
 
@@ -21,23 +23,14 @@ public class CompassoApplication {
 		SpringApplication.run(CompassoApplication.class, args);
 	}
 
-	/*
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*").allowedHeaders("*").allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE");
-			}
-		};
-	}
-
 	@Bean
 	public CommandLineRunner init() {
 		return (args) -> {
 			if (args.length > 0) {
 				System.out.println(args[0]);
 			}
+
+			new File("uploads").mkdirs();
 
 			//repositorioAdministrador.save( new Administrador("adminCompasso","Comp@ssoCompostela") );
 
@@ -47,7 +40,5 @@ public class CompassoApplication {
 
 		};
 	}
-
- */
 
 }
